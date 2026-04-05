@@ -1,0 +1,42 @@
+{
+  "helloBuddy": "مرحباً يا صديقي",
+  "onboardingDescription": "نحن نساعدك في تسجيل\nحضورك وانصرافك\nمن العمل",
+  "getStarted": "ابدأ الآن",
+  "myAttendance": "سجل حضوري",
+  "checkIn": "تسجيل الدخول",
+  "checkOut": "تسجيل الخروج",
+  "notes": "ملاحظات",
+  "settings": "الإعدادات",
+  "appearance": "المظهر",
+  "darkMode": "الوضع الليلي",
+  "language": "اللغة",
+  "companyHours": "ساعات العمل",
+  "checkInTime": "وقت الحضور",
+  "checkOutTime": "وقت الانصراف",
+  "hoursDisabledMessage": "تم تعطيل تعديل الساعات لوجود سجلات حضور لهذا الشهر.",
+  "about": "حول التطبيق",
+  "version": "الإصدار",
+  "companySetup": "إعداد الشركة",
+  "setupDescription": "قم بتعيين ساعات عمل شركتك لتتبع الحضور بدقة.",
+  "noRecords": "لا توجد سجلات هذا الشهر",
+  "total": "المجموع",
+  "late": "تأخير",
+  "hr": "ساعة",
+  "absent": "غائب",
+  "onTime": "في الوقت",
+  "addNote": "إضافة ملاحظة",
+  "editNote": "تعديل الملاحظة",
+  "saveNote": "حفظ",
+  "noNotesYet": "لا توجد ملاحظات مسجلة",
+  "minutesLate": "{minutes} دقيقة تأخير",
+  "@minutesLate": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "upcoming": "قادم",
+  "noRecordsFound": "لا توجد سجلات حضور لهذا الشهر",
+  "notRecorded": "لم يتم التسجيل"
+}

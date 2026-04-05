@@ -1,0 +1,45 @@
+{
+  "helloBuddy": "Hello Buddy",
+  "@helloBuddy": {
+    "description": "Greeting on the onboarding screen"
+  },
+  "onboardingDescription": "We help you record your\nattendance and departure\nfrom work",
+  "getStarted": "Get Started",
+  "myAttendance": "My attendance",
+  "checkIn": "Check In",
+  "checkOut": "Check Out",
+  "notes": "Notes",
+  "settings": "Settings",
+  "appearance": "Appearance",
+  "darkMode": "Dark Mode",
+  "language": "Language",
+  "companyHours": "Company Hours",
+  "checkInTime": "Check-in Time",
+  "checkOutTime": "Check-out Time",
+  "hoursDisabledMessage": "Updating hours is disabled because you have attendance records for this month.",
+  "about": "About",
+  "version": "Version",
+  "companySetup": "Company Setup",
+  "setupDescription": "Set your company's working hours to track attendance accurately.",
+  "noRecords": "No records this month",
+  "total": "Total",
+  "late": "Late",
+  "hr": "Hr",
+  "absent": "Absent",
+  "onTime": "On Time",
+  "addNote": "Add Note",
+  "editNote": "Edit Note",
+  "saveNote": "Save",
+  "noNotesYet": "No notes recorded",
+  "minutesLate": "{minutes}m Late",
+  "@minutesLate": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "upcoming": "Upcoming",
+  "noRecordsFound": "No attendance records found for this month",
+  "notRecorded": "Not Recorded"
+}

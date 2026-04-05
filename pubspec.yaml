@@ -1,0 +1,51 @@
+name: record_attendance
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.5.1
+  shared_preferences: ^2.5.2
+  sqflite: ^2.4.2
+  path_provider: ^2.1.5
+  intl: ^0.20.2
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/fonts/tajwal/
+
+  fonts:
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/tajwal/Tajawal-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/tajwal/Tajawal-Light.ttf
+          weight: 300
+        - asset: assets/fonts/tajwal/Tajawal-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/tajwal/Tajawal-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/tajwal/Tajawal-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/tajwal/Tajawal-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/tajwal/Tajawal-Black.ttf
+          weight: 900
