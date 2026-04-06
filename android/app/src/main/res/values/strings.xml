@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="check_in_reminder_30">30 minutes until check-in time!</string>
+    <string name="check_in_reminder_15">15 minutes until check-in time!</string>
+    <string name="check_in_reminder_time">Time to check-in!</string>
+    <string name="check_out_reminder_30">30 minutes until check-out time!</string>
+    <string name="check_out_reminder_15">15 minutes until check-out time!</string>
+    <string name="check_out_reminder_time">Time to check-out!</string>
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
+</resources>

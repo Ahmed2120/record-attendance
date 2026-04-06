@@ -43,7 +43,12 @@
     - Implemented logic to delay "Absent" status for the current day until **2 hours after the scheduled checkout time**.
     - Prevents premature "Absent" markings while still highlighting today's card at 100% opacity.
     - Fixed card expansion logic to ensure records are always viewable/editable regardless of grace period status.
-- **UI/UX Polish**: 
-    - Reduced clutter by hiding notes into expandable sections.
-    - Increased font sizes in date cards for better readability.
-    - Ensured consistent dark mode colors across all new states.
+- Ensured consistent dark mode colors across all new states.
+
+## [2026-04-05] - Native Persistent Attendance Notifications
+- **Multi-Stage Reminders**: Background notifications trigger at -30m, -15m, and 0m offsets for check-in/out.
+- **Native Implementation**: Developed via Kotlin (`AlarmManager`) and Swift (`UNUserNotificationCenter`) for maximum reliability.
+- **Interactive Action Buttons**: Directly record attendance from the notification tray.
+- **Persistence & Timeout**: "Ongoing" notifications with an automatic 1-hour timeout as requested.
+- **Smart Status Sync**: Automatically skips reminders if the action was already performed.
+- **Localization**: Full English and Arabic support for native alerts.

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="check_in_reminder_30">بقي 30 دقيقة على موعد تسجيل الحضور!</string>
+    <string name="check_in_reminder_15">بقي 15 دقيقة على موعد تسجيل الحضور!</string>
+    <string name="check_in_reminder_time">حان موعد تسجيل الحضور!</string>
+    <string name="check_out_reminder_30">بقي 30 دقيقة على موعد تسجيل الانصراف!</string>
+    <string name="check_out_reminder_15">بقي 15 دقيقة على موعد تسجيل الانصراف!</string>
+    <string name="check_out_reminder_time">حان موعد تسجيل الانصراف!</string>
+    <string name="check_in">تسجيل الدخول</string>
+    <string name="check_out">تسجيل الخروج</string>
+</resources>

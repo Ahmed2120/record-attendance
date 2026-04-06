@@ -7,6 +7,7 @@ import 'core/providers/theme_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'features/splash/views/splash_view.dart';
 import 'core/services/settings_service.dart';
+import 'core/services/notification_service.dart';
 import 'l10n/app_localizations.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -17,6 +18,9 @@ void main() async {
   final container = ProviderContainer();
   // Initialize settings
   await container.read(settingsProvider.notifier).init();
+  
+  // Initialize notifications
+  await container.read(notificationServiceProvider).init();
 
   runApp(
     UncontrolledProviderScope(

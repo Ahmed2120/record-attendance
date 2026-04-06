@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Native Attendance Notifications - Technical Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --border: #e2e8f0;
+        }
+
+        [data-theme='dark'] {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .card {
+            background-color: var(--card);
+            border-radius: 32px;
+            padding: 48px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-weight: 800;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 16px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            position: relative;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .code-comment {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .keyword { color: #f472b6; font-weight: bold; }
+        .function { color: #60a5fa; }
+        .string { color: #34d399; }
+        .type { color: #fbbf24; }
+
+        footer {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="container">
+        <header>
+            <div class="badge">Architecture Whitepaper</div>
+            <h1>Native Attendance Reminders</h1>
+            <p class="subtitle">Line-by-Line Dart & Kotlin Deep Dive</p>
+        </header>
+
+        <!-- DART CODE EXPLANATION -->
+        <section class="card">
+            <h2><i>⚡</i> 1. NotificationService.dart</h2>
+            <p>This is the <strong>"Commander"</strong>. It tells the Native OS what to do and checks if any work was done in the background.</p>
+            
+            <div class="code-block">
+                <pre><code><span class="keyword">class</span> NotificationService {
+  <span class="code-comment">// 1. The "Pipe": This is the bridge that connects Dart to Native code</span>
+  <span class="keyword">static const</span> _channel = MethodChannel(<span class="string">'com.attendance.record_attendance/notifications'</span>);
+
+  <span class="code-comment">// 2. The Orders: This function translates Flutter settings into Native alarms</span>
+  <span class="keyword">Future&lt;void&gt;</span> <span class="function">refreshAlarms</span>() <span class="keyword">async</span> {
+    <span class="keyword">final</span> settings = _ref.read(settingsProvider);
+    
+    <span class="code-comment">// 3. SYNC: Save the hours to shared memory (XML on Android)</span>
+    <span class="keyword">final</span> prefs = <span class="keyword">await</span> SharedPreferences.getInstance();
+    <span class="keyword">await</span> prefs.setInt(<span class="string">'flutter.check_in_hour'</span>, settings.checkInTime.hour);
+    <span class="keyword">await</span> prefs.setInt(<span class="string">'flutter.check_in_minute'</span>, settings.checkInTime.minute);
+
+    <span class="code-comment">// 4. COMMAND: Call the Native side and pass the hours as a map</span>
+    <span class="keyword">await</span> _channel.invokeMethod(<span class="string">'scheduleAlarms'</span>, {
+      <span class="string">'checkInHour'</span>: settings.checkInTime.hour,
+      <span class="string">'checkInMinute'</span>: settings.checkInTime.minute,
+      <span class="string">'checkOutHour'</span>: settings.checkOutTime.hour,
+      <span class="string">'checkOutMinute'</span>: settings.checkOutTime.minute,
+    });
+  }
+
+  <span class="code-comment">// 5. THE LOOP: This checks if the user clicked "Check In" on a notification</span>
+  <span class="keyword">Future&lt;void&gt;</span> <span class="function">checkPendingActions</span>() <span class="keyword">async</span> {
+    <span class="keyword">final</span> prefs = <span class="keyword">await</span> SharedPreferences.getInstance();
+    <span class="keyword">final bool</span> pendingCheckIn = prefs.getBool(<span class="string">'flutter.pending_native_check_in'</span>) ?? <span class="keyword">false</span>;
+
+    <span class="code-comment">// 6. If a click was recorded by Native, finish the work in Flutter</span>
+    <span class="keyword">if</span> (pendingCheckIn) {
+      <span class="keyword">await</span> _ref.read(attendanceRecordsProvider(DateTime.now()).notifier).checkIn();
+      <span class="keyword">await</span> prefs.setBool(<span class="string">'flutter.pending_native_check_in'</span>, <span class="keyword">false</span>); <span class="code-comment">// Reset the flag</span>
+    }
+  }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- ATTENDANCE PROVIDER SYNC EXPLANATION -->
+        <section class="card">
+            <h2><i>📅</i> 2. Attendance Provider Sync</h2>
+            <p>Every time you check-in manually inside the app, we must tell the Native OS so it stops showing reminders for today.</p>
+            
+            <div class="code-block">
+                <pre><code><span class="keyword">Future&lt;void&gt;</span> <span class="function">checkIn</span>() <span class="keyword">async</span> {
+  <span class="code-comment">// ... (Normal SQLite logic here) ...</span>
+
+  <span class="code-comment">// 1. Tell Native "User is safe!"</span>
+  <span class="keyword">final</span> prefs = <span class="keyword">await</span> SharedPreferences.getInstance();
+  <span class="keyword">await</span> prefs.setBool(<span class="string">'flutter.is_checked_in'</span>, <span class="keyword">true</span>);
+  <span class="keyword">await</span> prefs.setBool(<span class="string">'flutter.is_checked_out'</span>, <span class="keyword">false</span>);
+  
+  <span class="code-comment">// Now, when the Native AlarmReceiver wakes up at 9:00 AM,</span>
+  <span class="code-comment">// it will read "flutter.is_checked_in" == true and DO NOTHING.</span>
+}</code></pre>
+            </div>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 60px 0;">
+
+        <!-- ALARM RECEIVER EXPLANATION -->
+        <section class="card">
+            <h2><i>🤖</i> 3. AlarmReceiver.kt (Android Brain)</h2>
+            <p>This Kotlin class wakes up and reads the "orders" left by the Dart Commander above.</p>
+            
+            <div class="code-block">
+                <pre><code><span class="keyword">class</span> AlarmReceiver : BroadcastReceiver() {
+    <span class="keyword">override fun</span> <span class="function">onReceive</span>(context: Context, intent: Intent) {
+        <span class="code-comment">// 1. Open shared memory (SharedPreferences)</span>
+        <span class="keyword">val</span> prefs = context.getSharedPreferences(<span class="string">"app_prefs"</span>, Context.MODE_PRIVATE)
+        
+        <span class="code-comment">// 2. Read the "Is Safe" flag we saved from Dart above</span>
+        <span class="keyword">val</span> isCheckedIn = prefs.getBoolean(<span class="string">"is_checked_in"</span>, <span class="keyword">false</span>)
+        
+        <span class="code-comment">// 3. If Dart said "True", then don't show any notification</span>
+        <span class="keyword">if</span> (isCheckedIn) <span class="keyword">return</span>
+        
+        <span class="code-comment">// ... otherwise show the sticky popup ...</span>
+    }
+}</code></pre>
+            </div>
+        </section>
+
+        <footer>
+            <p>Designed with ❤️ for Advanced Attendance Tracking</p>
+        </footer>
+    </div>
+    
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.setAttribute('data-theme', 'dark');
+        }
+    </script>
+</body>
+</html>

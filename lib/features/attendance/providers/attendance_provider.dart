@@ -3,6 +3,8 @@ import '../models/attendance_record.dart';
 import '../repositories/attendance_repository.dart';
 import '../../../core/services/database_service.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../core/services/settings_service.dart';
 
 // Provide the DatabaseService
@@ -64,6 +66,12 @@ class AttendanceListNotifier extends StateNotifier<AsyncValue<List<AttendanceRec
     );
 
     await _repo.checkIn(newRecord);
+    
+    // Sync to SharedPreferences for Native
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('flutter.is_checked_in', true);
+    await prefs.setBool('flutter.is_checked_out', false);
+    
     await refresh();
   }
 
@@ -81,6 +89,12 @@ class AttendanceListNotifier extends StateNotifier<AsyncValue<List<AttendanceRec
     );
 
     await _repo.checkOut(updatedRecord);
+    
+    // Sync to SharedPreferences for Native
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('flutter.is_checked_in', false);
+    await prefs.setBool('flutter.is_checked_out', true);
+    
     await refresh();
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/settings_service.dart';
 import '../providers/attendance_provider.dart';
+import '../../../core/services/notification_service.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/providers/locale_provider.dart';
 import '../../../l10n/app_localizations.dart';
@@ -36,6 +37,8 @@ class SettingsView extends ConsumerWidget {
       } else {
         await ref.read(settingsProvider.notifier).updateCheckOutTime(picked);
       }
+      // Refresh alarms for native
+      await ref.read(notificationServiceProvider).refreshAlarms();
     }
   }
 
