@@ -98,6 +98,12 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
+  /// No description provided for @appName.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Your Attendance'**
+  String get appName;
+
   /// Greeting on the onboarding screen
   ///
   /// In en, this message translates to:

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">سجل حضورك</string>
     <string name="check_in_reminder_30">بقي 30 دقيقة على موعد تسجيل الحضور!</string>
     <string name="check_in_reminder_15">بقي 15 دقيقة على موعد تسجيل الحضور!</string>
     <string name="check_in_reminder_time">حان موعد تسجيل الحضور!</string>

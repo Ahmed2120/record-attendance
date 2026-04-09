@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Record Your Attendance</string>
     <string name="check_in_reminder_30">30 minutes until check-in time!</string>
     <string name="check_in_reminder_15">15 minutes until check-in time!</string>
     <string name="check_in_reminder_time">Time to check-in!</string>

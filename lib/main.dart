@@ -30,22 +30,47 @@ void main() async {
   );
 }
 
-class AttendanceApp extends ConsumerWidget {
+class AttendanceApp extends ConsumerStatefulWidget {
   const AttendanceApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AttendanceApp> createState() => _AttendanceAppState();
+}
+
+class _AttendanceAppState extends ConsumerState<AttendanceApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Refresh notifications and check for any background actions
+      ref.read(notificationServiceProvider).checkPendingActions();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
     final locale = ref.watch(localeProvider);
 
     return MaterialApp(
       navigatorKey: navigatorKey,
-      title: 'Record Attendance',
+      title: 'Record Your Attendance - سجل حضورك',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      locale: locale, // if null, uses device default
+      locale: locale,
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -56,7 +81,7 @@ class AttendanceApp extends ConsumerWidget {
         Locale('en'),
         Locale('ar'),
       ],
-      home: const SplashView(), // Updated to start at Splash
+      home: const SplashView(),
     );
   }
 }

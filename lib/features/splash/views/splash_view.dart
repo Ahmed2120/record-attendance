@@ -83,19 +83,27 @@ class _SplashViewState extends ConsumerState<SplashView> with SingleTickerProvid
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.timer_rounded,
-                      size: 100,
-                      color: Theme.of(context).primaryColor,
+                    Image.asset(
+                      'assets/images/logo.png',
+                      width: 180,
+                      height: 180,
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Attendance',
+                      'Record Your Attendance',
                       style: TextStyle(
-                        fontSize: 32,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.primary,
+                        letterSpacing: 1.1,
+                      ),
+                    ),
+                    Text(
+                      'سجل حضورك',
+                      style: TextStyle(
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primary,
-                        letterSpacing: 1.2,
                       ),
                     ),
                   ],

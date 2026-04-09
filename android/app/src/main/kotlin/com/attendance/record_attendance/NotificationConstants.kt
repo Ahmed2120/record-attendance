@@ -14,6 +14,6 @@ object NotificationConstants {
     const val NOTIFICATION_ID_CHECK_IN = 1001
     const val NOTIFICATION_ID_CHECK_OUT = 1002
     
-    const val PREFS_NAME = "FlutterSharedPreferences"
+    const val PREFS_NAME = "com.attendance.record_attendance_preferences"
     const val PREF_IS_CHECKED_IN = "flutter.is_checked_in" // Matches SharedPreferences plugin prefix
 }

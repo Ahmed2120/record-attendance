@@ -52,3 +52,7 @@
 - **Persistence & Timeout**: "Ongoing" notifications with an automatic 1-hour timeout as requested.
 - **Smart Status Sync**: Automatically skips reminders if the action was already performed.
 - **Localization**: Full English and Arabic support for native alerts.
+## [2026-04-10] - System-Level Identity Localization
+- **Multi-Platform Localization**: Fully localized the application name for both Android and iOS operating systems in Arabic and English.
+- **Dynamic OS Labels**: Configured Android `strings.xml` and iOS `InfoPlist.strings` so that the app name under the icon automatically switches between "Record Your Attendance" and "سجل حضورك" based on the device's system language.
+- **Manifest Integration**: Tied the Android application label to the string resource system for future-proof localization management.

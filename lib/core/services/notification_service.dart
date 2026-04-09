@@ -62,14 +62,14 @@ class NotificationService {
     final bool pendingCheckIn = prefs.getBool('flutter.pending_native_check_in') ?? false;
     final bool pendingCheckOut = prefs.getBool('flutter.pending_native_check_out') ?? false;
 
-    if (pendingCheckIn) {
-      await _ref.read(attendanceRecordsProvider(DateTime.now()).notifier).checkIn();
-      await prefs.setBool('flutter.pending_native_check_in', false);
-    }
-    
-    if (pendingCheckOut) {
-      await _ref.read(attendanceRecordsProvider(DateTime.now()).notifier).checkOut();
-      await prefs.setBool('flutter.pending_native_check_out', false);
+    if (pendingCheckIn || pendingCheckOut) {
+      // Just refresh the data from DB since the native side already created the record
+      final now = DateTime.now();
+      _ref.read(attendanceRecordsProvider(DateTime(now.year, now.month)).notifier).refresh();
+      
+      // Clear flags
+      if (pendingCheckIn) await prefs.setBool('flutter.pending_native_check_in', false);
+      if (pendingCheckOut) await prefs.setBool('flutter.pending_native_check_out', false);
     }
   }
 }

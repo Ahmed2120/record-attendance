@@ -1,4 +1,5 @@
 {
+  "appName": "Record Your Attendance",
   "helloBuddy": "Hello Buddy",
   "@helloBuddy": {
     "description": "Greeting on the onboarding screen"

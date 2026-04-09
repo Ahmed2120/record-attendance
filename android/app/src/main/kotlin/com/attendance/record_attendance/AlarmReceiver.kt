@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.attendance.record_attendance.NotificationConstants as Const
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -60,14 +61,16 @@ class AlarmReceiver : BroadcastReceiver() {
         val actionText = context.getString(if (isCheckIn) R.string.check_in else R.string.check_out)
         
         val builder = NotificationCompat.Builder(context, Const.CHANNEL_ID)
-            .setSmallIcon(R.drawable.launch_background) // Placeholder icon
+            .setSmallIcon(R.drawable.ic_launcher)
+            .setColor(ContextCompat.getColor(context, R.color.notification_color))
+            .setColorized(true)
             .setContentTitle(context.getString(titleRes))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setOngoing(true)
             .setAutoCancel(false)
             .setTimeoutAfter(3600000) // 1 hour in milliseconds
-            .addAction(R.drawable.launch_background, actionText, actionPendingIntent)
+            .addAction(R.drawable.ic_launcher, actionText, actionPendingIntent)
 
         notificationManager.notify(if (isCheckIn) Const.NOTIFICATION_ID_CHECK_IN else Const.NOTIFICATION_ID_CHECK_OUT, builder.build())
         
