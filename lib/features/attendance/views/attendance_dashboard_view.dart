@@ -82,6 +82,15 @@ class _AttendanceDashboardViewState extends ConsumerState<AttendanceDashboardVie
       }
     });
 
+    // Also listen to recordsAsync to trigger scroll once data is loaded for the first time
+    ref.listen(attendanceRecordsProvider(selectedMonth), (previous, next) {
+      if (previous is AsyncLoading && next is AsyncData) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToToday();
+        });
+      }
+    });
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(

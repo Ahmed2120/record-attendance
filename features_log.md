@@ -14,6 +14,9 @@
 - **Premium UI & Localization**:
     - Designed with glassmorphic inputs and smooth state transitions.
     - Fully localized into English and Arabic.
+- **Auto-Scroll to Today**:
+    - The dashboard now automatically scrolls to the current day when opened.
+    - Added smart detection to re-scroll when switching back to the current month.
 
 ## [2026-04-05] - Dashboard UI Refinement
 - **Current Day Display**: Updated the attendance list to show "Check In" and "Check Out" placeholders (with "-") for the current day even if no record has been created yet. This replaces the previous empty/upcoming state for Today, providing a clearer indication of pending actions.
