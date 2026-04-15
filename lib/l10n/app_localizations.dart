@@ -301,6 +301,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not Recorded'**
   String get notRecorded;
+
+  /// No description provided for @testNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Notifications'**
+  String get testNotifications;
+
+  /// No description provided for @testCheckInNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Check In Notification'**
+  String get testCheckInNotification;
+
+  /// No description provided for @testCheckOutNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Check Out Notification'**
+  String get testCheckOutNotification;
+
+  /// No description provided for @vacations.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacation Days'**
+  String get vacations;
+
+  /// No description provided for @weeklyHolidays.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Holidays'**
+  String get weeklyHolidays;
+
+  /// No description provided for @addVacation.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Vacation Day'**
+  String get addVacation;
+
+  /// No description provided for @vacation.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacation'**
+  String get vacation;
+
+  /// No description provided for @noVacationsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No vacation days added'**
+  String get noVacationsFound;
+
+  /// No description provided for @deleteVacation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Vacation'**
+  String get deleteVacation;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
+
+  /// No description provided for @dailyTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Tasks'**
+  String get dailyTasks;
+
+  /// No description provided for @addTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Task...'**
+  String get addTask;
+
+  /// No description provided for @noTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks for today'**
+  String get noTasks;
+
+  /// No description provided for @moveToTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Tomorrow'**
+  String get moveToTomorrow;
+
+  /// No description provided for @tasksFromYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks from yesterday'**
+  String get tasksFromYesterday;
+
+  /// No description provided for @remindMeTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me tomorrow'**
+  String get remindMeTomorrow;
 }
 
 class _AppLocalizationsDelegate

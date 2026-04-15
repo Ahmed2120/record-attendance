@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/date_converter.dart';
 import '../../models/attendance_record.dart';
+import '../../providers/todo_provider.dart';
+import 'todo_list_widget.dart';
+import '../../providers/attendance_provider.dart';
 
-class AttendanceListItem extends StatefulWidget {
+class AttendanceListItem extends ConsumerStatefulWidget {
   final AttendanceRecord? record;
   final DateTime date;
   final bool isHighlighted;
@@ -18,14 +22,18 @@ class AttendanceListItem extends StatefulWidget {
     required this.date,
     this.isHighlighted = false,
     this.isFuture = false,
+    this.isHoliday = false,
     this.onSaveNote,
   });
 
+  final bool isHoliday;
+
   @override
-  State<AttendanceListItem> createState() => _AttendanceListItemState();
+  ConsumerState<AttendanceListItem> createState() => _AttendanceListItemState();
 }
 
-class _AttendanceListItemState extends State<AttendanceListItem> with SingleTickerProviderStateMixin {
+class _AttendanceListItemState extends ConsumerState<AttendanceListItem> with SingleTickerProviderStateMixin {
+
   bool _isExpanded = false;
   late TextEditingController _noteController;
 
@@ -86,7 +94,8 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
         : (isDark ? Colors.white60 : theme.textTheme.bodyMedium!.color!);
 
     // New: Handle border and opacity for different states
-    final bool isPastAbsent = isAbsent && !widget.isFuture;
+    final bool isPastAbsent = isAbsent && !widget.isFuture && !widget.isHoliday;
+    final bool isHolidayAbsent = isAbsent && widget.isHoliday;
     // Don't dim if it's highlighted (today) even if it's "pending" (isFuture)
     final double cardOpacity = (widget.isFuture && !widget.isHighlighted) ? 0.6 : 1.0;
 
@@ -109,11 +118,13 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
           ],
           border: widget.isHighlighted
               ? null
-              : (isPastAbsent || widget.isFuture)
+              : (isPastAbsent || widget.isFuture || isHolidayAbsent)
                   ? Border.all(
                       color: isPastAbsent 
                         ? Colors.redAccent.withOpacity(0.2) 
-                        : (isDark ? Colors.white10 : Colors.black12),
+                        : isHolidayAbsent
+                          ? theme.primaryColor.withOpacity(0.2)
+                          : (isDark ? Colors.white10 : Colors.black12),
                       width: 1.5,
                       style: BorderStyle.solid,
                     )
@@ -169,7 +180,7 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
                       ),
                       const SizedBox(width: 16),
                       // Times, Absent or Future State
-                      if (widget.isFuture && isAbsent && !widget.isHighlighted)
+                      if (widget.isFuture && isAbsent && !widget.isHighlighted && !widget.isHoliday)
                         Expanded(
                           child: Text(
                             l10n.upcoming, 
@@ -178,6 +189,29 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
                               fontWeight: FontWeight.w500,
                               color: isDark ? Colors.white38 : Colors.black38,
                             ),
+                          ),
+                        )
+                      else if (isHolidayAbsent)
+                         Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.vacation,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: widget.isHighlighted ? Colors.white : theme.primaryColor,
+                                ),
+                              ),
+                              Text(
+                                l10n.weeklyHolidays, // Or more general "Holiday"
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: (widget.isHighlighted ? Colors.white : theme.primaryColor).withOpacity(0.5),
+                                ),
+                              ),
+                            ],
                           ),
                         )
                       else if (isAbsent && !widget.isHighlighted)
@@ -214,7 +248,7 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
                         ),
                       ],
                       // Status Icon / Toggle icon
-                      if (!widget.isFuture)
+                      if (!widget.isFuture || (ref.watch(todoProvider(widget.date)).value?.isNotEmpty ?? false))
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
@@ -226,6 +260,44 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
                             color: widget.isHighlighted ? Colors.white : theme.primaryColor,
                           ),
                         ),
+                      if (widget.isHoliday && !isAbsent)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: Tooltip(
+                            message: l10n.vacation,
+                            child: Icon(
+                              Icons.beach_access_rounded,
+                              size: 20,
+                              color: widget.isHighlighted ? Colors.white70 : theme.primaryColor.withOpacity(0.6),
+                            ),
+                          ),
+                        ),
+                      
+                      // Task Progress Badge (Mini)
+                      ref.watch(todoProvider(widget.date)).whenData((todos) {
+                        if (todos.isEmpty) return const SizedBox.shrink();
+                        final done = todos.where((t) => t.isDone).length;
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 4),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: widget.isHighlighted ? Colors.white24 : theme.primaryColor.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: done == todos.length 
+                              ? Icon(Icons.check_rounded, size: 12, color: widget.isHighlighted ? Colors.white : theme.primaryColor)
+                              : Text(
+                                  '$done',
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    color: widget.isHighlighted ? Colors.white : theme.primaryColor,
+                                  ),
+                                ),
+                          ),
+                        );
+                      }).value ?? const SizedBox.shrink(),
                     ],
                   ),
                   
@@ -233,13 +305,22 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
                   AnimatedSize(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
-                    child: (_isExpanded && !(widget.isFuture && isAbsent))
+                    child: (_isExpanded && (!(widget.isFuture && isAbsent) || (ref.watch(todoProvider(widget.date)).value?.isNotEmpty ?? false)))
                         ? Column(
                             children: [
                               const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0),
                                 child: Divider(height: 1, color: Colors.white24),
                               ),
+                              
+                              // To-Do List Section
+                              TodoListWidget(date: widget.date, isHighlighted: widget.isHighlighted),
+                              
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 12.0),
+                                child: Divider(height: 1, color: Colors.white24),
+                              ),
+
                               if (!isAbsent) ...[
                                 // Lateness Status
                                 Row(
@@ -290,21 +371,53 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
                                         ),
                                       ),
                                       const SizedBox(height: 8),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: TextButton.icon(
-                                          onPressed: () {
-                                            if (widget.onSaveNote != null) {
-                                              widget.onSaveNote!(_noteController.text);
-                                            }
-                                          },
-                                          icon: const Icon(Icons.save_rounded, size: 16),
-                                          label: Text(l10n.saveNote),
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: widget.isHighlighted ? Colors.white : theme.primaryColor,
-                                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          TextButton.icon(
+                                            onPressed: () {
+                                              if (_noteController.text.trim().isEmpty) return;
+                                              
+                                              // Logic to move to next work day
+                                              // For simplicity, we'll just move to "tomorrow"
+                                              // In a real app, we'd check for weekends/vacations
+                                              final tomorrow = widget.date.add(const Duration(days: 1));
+                                              ref.read(todoProvider(tomorrow).notifier).addTodo(_noteController.text.trim());
+                                              
+                                              // Clear current note if desired, or keep it
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(l10n.moveToTomorrow),
+                                                  behavior: SnackBarBehavior.floating,
+                                                  backgroundColor: theme.primaryColor,
+                                                )
+                                              );
+                                            },
+                                            icon: const Icon(Icons.next_plan_rounded, size: 16),
+                                            label: Text(l10n.remindMeTomorrow),
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: widget.isHighlighted ? Colors.white70 : theme.primaryColor.withOpacity(0.7),
+                                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                                            ),
                                           ),
-                                        ),
+                                          const SizedBox(width: 8),
+                                          ElevatedButton.icon(
+                                            onPressed: () {
+                                              if (widget.onSaveNote != null) {
+                                                widget.onSaveNote!(_noteController.text);
+                                              }
+                                            },
+                                            icon: const Icon(Icons.save_rounded, size: 16),
+                                            label: Text(l10n.saveNote),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: widget.isHighlighted ? Colors.white24 : theme.primaryColor.withOpacity(0.1),
+                                              foregroundColor: widget.isHighlighted ? Colors.white : theme.primaryColor,
+                                              elevation: 0,
+                                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   )
@@ -335,7 +448,7 @@ class _AttendanceListItemState extends State<AttendanceListItem> with SingleTick
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                                   child: Text(
-                                    l10n.absent,
+                                    widget.isHoliday ? l10n.vacation : l10n.absent,
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: valueColor,

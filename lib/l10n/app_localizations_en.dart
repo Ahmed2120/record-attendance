@@ -114,4 +114,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notRecorded => 'Not Recorded';
+
+  @override
+  String get testNotifications => 'Test Notifications';
+
+  @override
+  String get testCheckInNotification => 'Test Check In Notification';
+
+  @override
+  String get testCheckOutNotification => 'Test Check Out Notification';
+
+  @override
+  String get vacations => 'Vacation Days';
+
+  @override
+  String get weeklyHolidays => 'Weekly Holidays';
+
+  @override
+  String get addVacation => 'Add Vacation Day';
+
+  @override
+  String get vacation => 'Vacation';
+
+  @override
+  String get noVacationsFound => 'No vacation days added';
+
+  @override
+  String get deleteVacation => 'Delete Vacation';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
+  String get dailyTasks => 'Daily Tasks';
+
+  @override
+  String get addTask => 'Add Task...';
+
+  @override
+  String get noTasks => 'No tasks for today';
+
+  @override
+  String get moveToTomorrow => 'Move to Tomorrow';
+
+  @override
+  String get tasksFromYesterday => 'Tasks from yesterday';
+
+  @override
+  String get remindMeTomorrow => 'Remind me tomorrow';
 }

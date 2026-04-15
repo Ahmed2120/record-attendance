@@ -11,12 +11,57 @@ import 'widgets/attendance_list_item.dart';
 import 'widgets/month_selector.dart';
 import 'settings_view.dart';
 import '../../../core/services/settings_service.dart';
+import '../providers/vacation_provider.dart';
+import '../models/vacation_day.dart';
 
-class AttendanceDashboardView extends ConsumerWidget {
+class AttendanceDashboardView extends ConsumerStatefulWidget {
   const AttendanceDashboardView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AttendanceDashboardView> createState() => _AttendanceDashboardViewState();
+}
+
+class _AttendanceDashboardViewState extends ConsumerState<AttendanceDashboardView> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    
+    // Auto-scroll to today
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToToday();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToToday() {
+    if (!_scrollController.hasClients) return;
+    
+    final now = DateTime.now();
+    final selectedMonth = ref.read(selectedMonthProvider);
+    
+    // Only scroll if we are in the current month
+    if (selectedMonth.year == now.year && selectedMonth.month == now.month) {
+      final todayIndex = now.day - 1;
+      const itemHeight = 94.0; // Approximation of collapsed item height + margin
+      
+      _scrollController.animateTo(
+        todayIndex * itemHeight,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final isRtl = Directionality.of(context) == TextDirection.rtl;
@@ -24,8 +69,18 @@ class AttendanceDashboardView extends ConsumerWidget {
     final themeMode = ref.watch(themeProvider);
     final settings = ref.watch(settingsProvider);
     final recordsAsync = ref.watch(attendanceRecordsProvider(selectedMonth));
+    final vacationsAsync = ref.watch(vacationProvider);
     final todayAsync = ref.watch(todayAttendanceProvider);
     final isDark = theme.brightness == Brightness.dark;
+
+    // Listen for month changes to scroll to today if needed
+    ref.listen(selectedMonthProvider, (previous, next) {
+      if (previous?.month != next.month || previous?.year != next.year) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToToday();
+        });
+      }
+    });
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -100,10 +155,17 @@ class AttendanceDashboardView extends ConsumerWidget {
                                 );
                               }
 
+                              final vacations = vacationsAsync.when(
+                                data: (v) => v,
+                                loading: () => <VacationDay>[],
+                                error: (_, __) => <VacationDay>[],
+                              );
+
                               final daysInMonth = DateUtils.getDaysInMonth(selectedMonth.year, selectedMonth.month);
                               final allDays = List.generate(daysInMonth, (i) => DateTime(selectedMonth.year, selectedMonth.month, i + 1));
 
                               return ListView.builder(
+                                controller: _scrollController,
                                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                                 itemCount: allDays.length,
                                 itemBuilder: (context, index) {
@@ -112,6 +174,9 @@ class AttendanceDashboardView extends ConsumerWidget {
                                     (r) => DateConverter.isSameDay(r.checkInTime, day),
                                     orElse: () => AttendanceRecord(checkInTime: day, id: -1), // ID -1 means no record
                                   );
+
+                                  final isHoliday = settings.weeklyHolidays.contains(day.weekday) || 
+                                                  vacations.any((v) => DateConverter.isSameDay(v.date, day));
 
                                   final isAbsent = record.id == -1;
                                   final actualRecord = isAbsent ? null : record;
@@ -135,6 +200,7 @@ class AttendanceDashboardView extends ConsumerWidget {
                                     date: day,
                                     isHighlighted: isToday,
                                     isFuture: isFuture || hideAbsence,
+                                    isHoliday: isHoliday,
                                     onSaveNote: actualRecord != null ? (note) {
                                       ref.read(attendanceRecordsProvider(selectedMonth).notifier)
                                          .updateNote(actualRecord, note);

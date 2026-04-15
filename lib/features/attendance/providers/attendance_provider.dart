@@ -6,6 +6,9 @@ import '../../../core/services/database_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/settings_service.dart';
+import '../models/vacation_day.dart';
+import 'vacation_provider.dart';
+import '../../../core/utils/date_converter.dart';
 
 // Provide the DatabaseService
 final databaseServiceProvider = Provider((ref) => DatabaseService());
@@ -55,8 +58,19 @@ class AttendanceListNotifier extends StateNotifier<AsyncValue<List<AttendanceRec
       settings.checkInTime.minute,
     );
     
+    // Check if it's a vacation or holiday
+    bool isHoliday = settings.weeklyHolidays.contains(now.weekday);
+    if (!isHoliday) {
+      final vacationsAsync = _ref.read(vacationProvider);
+      vacationsAsync.whenData((vacations) {
+        if (vacations.any((v) => DateConverter.isSameDay(v.date, now))) {
+          isHoliday = true;
+        }
+      });
+    }
+
     int lateMinutes = 0;
-    if (now.isAfter(targetTime)) {
+    if (!isHoliday && now.isAfter(targetTime)) {
       lateMinutes = now.difference(targetTime).inMinutes;
     }
 

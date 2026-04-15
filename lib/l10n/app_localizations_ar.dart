@@ -109,8 +109,74 @@ class AppLocalizationsAr extends AppLocalizations {
   String get upcoming => 'قادم';
 
   @override
-  String get noRecordsFound => 'لا توجد سجلات حضور لهذا الشهر';
+  String get noRecordsFound => 'لم يتم العثور على سجلات حضور لهذا الشهر';
 
   @override
   String get notRecorded => 'لم يتم التسجيل';
+
+  @override
+  String get testNotifications => 'إختبار الإشعارات';
+
+  @override
+  String get testCheckInNotification => 'إختبار إشعار الحضور';
+
+  @override
+  String get testCheckOutNotification => 'إختبار إشعار الإنصراف';
+
+  @override
+  String get vacations => 'أيام الإجازة';
+
+  @override
+  String get weeklyHolidays => 'الإجازات الأسبوعية';
+
+  @override
+  String get addVacation => 'إضافة يوم إجازة';
+
+  @override
+  String get vacation => 'إجازة';
+
+  @override
+  String get noVacationsFound => 'لم يتم إضافة أيام إجازة';
+
+  @override
+  String get deleteVacation => 'حذف الإجازة';
+
+  @override
+  String get monday => 'الأثنين';
+
+  @override
+  String get tuesday => 'الثلاثاء';
+
+  @override
+  String get wednesday => 'الأربعاء';
+
+  @override
+  String get thursday => 'الخميس';
+
+  @override
+  String get friday => 'الجمعة';
+
+  @override
+  String get saturday => 'السبت';
+
+  @override
+  String get sunday => 'الأحد';
+
+  @override
+  String get dailyTasks => 'المهام اليومية';
+
+  @override
+  String get addTask => 'إضافة مهمة...';
+
+  @override
+  String get noTasks => 'لا توجد مهام لليوم';
+
+  @override
+  String get moveToTomorrow => 'نقل لغد';
+
+  @override
+  String get tasksFromYesterday => 'مهام من الأمس';
+
+  @override
+  String get remindMeTomorrow => 'ذكرني غداً';
 }

@@ -24,6 +24,15 @@ class MainActivity : FlutterActivity() {
                 
                 scheduleAllAlarms(checkInH, checkInM, checkOutH, checkOutM)
                 result.success(true)
+            } else if (call.method == "testNotification") {
+                val type = call.argument<String>("type") ?: Const.TYPE_CHECK_IN
+                val intent = Intent(this, AlarmReceiver::class.java).apply {
+                    putExtra(Const.EXTRA_TYPE, type)
+                    putExtra("offset", 0)
+                    putExtra("isTest", true)
+                }
+                sendBroadcast(intent)
+                result.success(true)
             } else {
                 result.notImplemented()
             }

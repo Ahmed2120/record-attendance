@@ -1,5 +1,20 @@
 # Project Features Log
 
+## [2026-04-15] - Reminders & Daily To-Do List
+- **Daily To-Do List**:
+    - Integrated a task management system directly into the attendance day cards.
+    - Features include adding tasks, checking them off with animations, and deleting them.
+    - Added a **Progress Badge** (`n/m`) on the collapsed dashboard cards for quick visibility.
+- **Notes for Tomorrow (Handoff)**:
+    - Implemented "Remind me tomorrow" logic in the note editor.
+    - Allows users to instantly convert their unfinished work notes into To-Do items for the next day.
+- **Persistent Storage**:
+    - Added a new SQLite table `todo_items` to ensure tasks are preserved across sessions.
+    - Decoupled tasks from attendance records so they can be added to future dates.
+- **Premium UI & Localization**:
+    - Designed with glassmorphic inputs and smooth state transitions.
+    - Fully localized into English and Arabic.
+
 ## [2026-04-05] - Dashboard UI Refinement
 - **Current Day Display**: Updated the attendance list to show "Check In" and "Check Out" placeholders (with "-") for the current day even if no record has been created yet. This replaces the previous empty/upcoming state for Today, providing a clearer indication of pending actions.
 - **Theme Switching Fix**: Resolved a "double-tap" bug where the dark mode switch required two taps to activate from system theme mode.
@@ -56,3 +71,22 @@
 - **Multi-Platform Localization**: Fully localized the application name for both Android and iOS operating systems in Arabic and English.
 - **Dynamic OS Labels**: Configured Android `strings.xml` and iOS `InfoPlist.strings` so that the app name under the icon automatically switches between "Record Your Attendance" and "سجل حضورك" based on the device's system language.
 - **Manifest Integration**: Tied the Android application label to the string resource system for future-proof localization management.
+
+## [2026-04-12] - Test Notifications Configuration
+- Added highly requested "Test Notification" buttons to the settings view for Check In and Check Out native notifications.
+- Enhanced Android MethodChannel to receive and broadcast intent triggers for immediate on-demand native notifications.
+
+## [2026-04-13] - Vacation Days & Weekly Holidays Support
+- **Weekly Holidays (Weekends)**:
+    - Introduced system-wide support for recurring weekly holidays (weekends).
+    - Defaulted weekly holidays to **Friday and Saturday**.
+    - Added a selection UI in Settings to customize these days (e.g., Sunday only, or none).
+- **Vacation Days (Specific Dates)**:
+    - Added a new SQLite table `vacations` to store specific holiday dates.
+    - Implemented a management UI with a date picker to add special vacation days.
+- **Intelligent Attendance Logic**:
+    - **No Absence Marking**: Days identified as holidays or vacations are no longer marked as "Absent" in the Dashboard. They now display a "Vacation" status with a beach-access icon.
+    - **Grace for Lateness**: Users who check in on a holiday/vacation day are automatically recorded with **0 minutes late**, regardless of the actual check-in time.
+- **UI & Localization**:
+    - Created `VacationsView` and `WeeklyHolidaysView` with premium card-based designs.
+    - Fully localized all new features and day names into Arabic and English.

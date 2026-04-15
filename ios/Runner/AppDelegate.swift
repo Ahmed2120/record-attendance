@@ -25,6 +25,24 @@ import UserNotifications
         }
         self.scheduleAllAlarms(cinH: cinH, cinM: cinM, coutH: coutH, coutM: coutM)
         result(true)
+      } else if (call.method == "testNotification") {
+        let args = call.arguments as? [String: Any]
+        let typeStr = args?["type"] as? String ?? "check_in"
+        let isCheckIn = typeStr == "check_in"
+        let typeLabel = isCheckIn ? "Check-In" : "Check-Out"
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Test \(typeLabel) Reminder"
+        content.body = "This is a test notification for \(typeLabel)."
+        content.categoryIdentifier = "ATTENDANCE_CATEGORY"
+        content.sound = .default
+        
+        // Trigger after 1 second
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: "test_\(typeLabel)", content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request)
+        result(true)
       } else {
         result(FlutterMethodNotImplemented)
       }

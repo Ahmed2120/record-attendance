@@ -6,6 +6,8 @@ import '../../../core/services/notification_service.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/providers/locale_provider.dart';
 import '../../../l10n/app_localizations.dart';
+import 'vacations_view.dart';
+import 'weekly_holidays_view.dart';
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
@@ -159,6 +161,44 @@ class SettingsView extends ConsumerWidget {
                   subtitle: settings.checkOutTime.format(context),
                   onTap: hasRecords ? null : () => _selectTime(context, ref, false),
                   icon: Icons.logout_rounded,
+                ),
+                
+                const SizedBox(height: 32),
+                _buildSectionHeader(l10n.vacations),
+                const SizedBox(height: 12),
+                _buildSettingTile(
+                  context,
+                  l10n.vacations,
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const VacationsView()));
+                  },
+                  icon: Icons.calendar_today_rounded,
+                ),
+                const SizedBox(height: 12),
+                _buildSettingTile(
+                  context,
+                  l10n.weeklyHolidays,
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const WeeklyHolidaysView()));
+                  },
+                  icon: Icons.event_repeat_rounded,
+                ),
+
+                const SizedBox(height: 32),
+                _buildSectionHeader(l10n.testNotifications),
+                const SizedBox(height: 12),
+                _buildSettingTile(
+                  context,
+                  l10n.testCheckInNotification,
+                  onTap: () => ref.read(notificationServiceProvider).testNotification(isCheckIn: true),
+                  icon: Icons.notifications_active_rounded,
+                ),
+                const SizedBox(height: 12),
+                _buildSettingTile(
+                  context,
+                  l10n.testCheckOutNotification,
+                  onTap: () => ref.read(notificationServiceProvider).testNotification(isCheckIn: false),
+                  icon: Icons.notifications_active_rounded,
                 ),
               ],
             ),

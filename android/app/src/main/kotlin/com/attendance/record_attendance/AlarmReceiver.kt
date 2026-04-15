@@ -16,15 +16,18 @@ class AlarmReceiver : BroadcastReceiver() {
         val type = intent.getStringExtra(Const.EXTRA_TYPE) ?: return
         val offset = intent.getIntExtra("offset", 0)
         
-        // Check if we should skip (e.g. already checked in)
-        val prefs = context.getSharedPreferences(Const.PREFS_NAME, Context.MODE_PRIVATE)
-        val isCheckedIn = prefs.getBoolean(Const.PREF_IS_CHECKED_IN, false)
-        
-        if (type == Const.TYPE_CHECK_IN && isCheckedIn) return
-        if (type == Const.`TYPE_CHECK_OUT` && !isCheckedIn) return
-        // Also check if already checked out today? We'll need another flag.
-        val isCheckedOut = prefs.getBoolean("flutter.is_checked_out", false)
-        if (type == Const.TYPE_CHECK_OUT && isCheckedOut) return
+        val isTest = intent.getBooleanExtra("isTest", false)
+        if (!isTest) {
+            // Check if we should skip (e.g. already checked in)
+            val prefs = context.getSharedPreferences(Const.PREFS_NAME, Context.MODE_PRIVATE)
+            val isCheckedIn = prefs.getBoolean(Const.PREF_IS_CHECKED_IN, false)
+            
+            if (type == Const.TYPE_CHECK_IN && isCheckedIn) return
+            if (type == Const.TYPE_CHECK_OUT && !isCheckedIn) return
+            // Also check if already checked out today? We'll need another flag.
+            val isCheckedOut = prefs.getBoolean("flutter.is_checked_out", false)
+            if (type == Const.TYPE_CHECK_OUT && isCheckedOut) return
+        }
 
         showNotification(context, type, offset)
     }
@@ -61,7 +64,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val actionText = context.getString(if (isCheckIn) R.string.check_in else R.string.check_out)
         
         val builder = NotificationCompat.Builder(context, Const.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_notification)
             .setColor(ContextCompat.getColor(context, R.color.notification_color))
             .setColorized(true)
             .setContentTitle(context.getString(titleRes))

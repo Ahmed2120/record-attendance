@@ -43,7 +43,7 @@ class NotificationService {
     await prefs.setInt('flutter.check_out_minute', settings.checkOutTime.minute);
 
     try {
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid || Platform.isIOS) {
         await _channel.invokeMethod('scheduleAlarms', {
           'checkInHour': settings.checkInTime.hour,
           'checkInMinute': settings.checkInTime.minute,
@@ -53,6 +53,18 @@ class NotificationService {
       }
     } catch (e) {
       print('Failed to schedule alarms: $e');
+    }
+  }
+
+  Future<void> testNotification({bool isCheckIn = true}) async {
+    try {
+      if (Platform.isAndroid || Platform.isIOS) {
+        await _channel.invokeMethod('testNotification', {
+          'type': isCheckIn ? 'check_in' : 'check_out',
+        });
+      }
+    } catch (e) {
+      print('Failed to send test notification: $e');
     }
   }
 

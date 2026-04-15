@@ -55,7 +55,7 @@ class NotificationActionReceiver : BroadcastReceiver() {
         val notificationId = if (type == Const.TYPE_CHECK_IN) Const.NOTIFICATION_ID_CHECK_IN else Const.NOTIFICATION_ID_CHECK_OUT
         
         val builder = androidx.core.app.NotificationCompat.Builder(context, Const.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_notification)
             .setColor(ContextCompat.getColor(context, R.color.notification_color))
             .setContentTitle("Success")
             .setContentText(if (type == Const.TYPE_CHECK_IN) "Check-in recorded" else "Check-out recorded")
