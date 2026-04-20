@@ -1,0 +1,1 @@
+Record Your Attendance (سجل حضورك) - A premium Flutter application for professional time-tracking, featuring native persistent notifications (Kotlin/Swift), smart task management, glassmorphic UI, and full English/Arabic localization.
