@@ -61,7 +61,7 @@
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/[Your-Username]/record_attendance.git
+   git clone https://github.com/Ahmed2120/record_attendance.git
    ```
 2. Install dependencies:
    ```bash
